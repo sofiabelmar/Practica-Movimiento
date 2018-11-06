@@ -12,6 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+//Librerias para multiprocesamiento
+using System.Threading;  
+using System.Diagnostics;
 
 namespace PracticaMovimiento
 {
@@ -20,10 +23,50 @@ namespace PracticaMovimiento
     /// </summary>
     public partial class MainWindow : Window
     {
+        Stopwatch stopwatch;
+        TimeSpan tiempoAnterior;
+
+
         public MainWindow()
         {
             InitializeComponent();
             Canvas1.Focus();
+
+            stopwatch = new Stopwatch();
+            stopwatch.Start();
+            tiempoAnterior = stopwatch.Elapsed;
+
+            //1.Establecer instrucciones
+            ThreadStart threadStart = new ThreadStart(moverEnemigo);
+            //2.Inicializar el thread
+            Thread threadMoverEnemigos = new Thread(threadStart);
+            //3.Ejecutar el thread
+            threadMoverEnemigos.Start();
+
+
+        }
+
+        void moverEnemigo()
+        {
+            while (true)
+            {
+                Dispatcher.Invoke(() =>
+                {
+
+                    var tiempoActual = stopwatch.Elapsed;
+                    var deltaTime = tiempoActual - tiempoAnterior;
+
+                    double leftCarroActual = Canvas.GetLeft(carro);
+                    Canvas.SetLeft(carro, leftCarroActual - (90 * deltaTime.TotalSeconds));
+                    if (Canvas.GetLeft(carro) <= -153)
+                    {
+                        Canvas.SetLeft(carro, 800);
+                    }
+                    tiempoAnterior = tiempoActual;
+
+                });
+            }
+
         }
 
         private void Canvas1_KeyDown(object sender, KeyEventArgs e)

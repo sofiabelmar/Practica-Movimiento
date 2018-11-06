@@ -94,6 +94,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="carro.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="kisspng-flower-illustration-free-stock-vector-decorative-flowers-png-5aab4d7e221a48.3026837615211759341397.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
